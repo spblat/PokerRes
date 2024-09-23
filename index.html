@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Form</title>
+</head>
+<body>
+    <h1>Update Data</h1>
+    <form id="dataForm">
+        <label for="dataInput">Enter some text:</label>
+        <input type="text" id="dataInput" name="data" value="" />
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        const accessKey = '$2a$10$n2R7cE.TDZUvv3pHSw0tb.SnA2rQat9H2ol3QMcOFOPn2WAKUXSRa';
+        const binId = '66f1b7d0acd3cb34a889ea39';
+
+        // Fetch the existing JSON data and populate the form
+        async function fetchData() {
+            try {
+                const response = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
+                    headers: {
+                        'X-Access-Key': accessKey
+                    }
+                });
+                const result = await response.json();
+                const data = result.record.data;
+                document.getElementById('dataInput').value = data || '';
+            } catch (error) {
+                console.error('Error fetching JSON:', error);
+            }
+        }
+
+        // On form submit, update the JSON data with the new input
+        document.getElementById('dataForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const inputValue = document.getElementById('dataInput').value;
+
+            try {
+                const response = await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Access-Key': accessKey
+                    },
+                    body: JSON.stringify({ data: inputValue })
+                });
+
+                if (response.ok) {
+                    alert('Data updated successfully!');
+                } else {
+                    alert('Failed to update data');
+                }
+            } catch (error) {
+                console.error('Error updating JSON:', error);
+            }
+        });
+
+        // Load the current data when the page loads
+        fetchData();
+    </script>
+</body>
+</html>
