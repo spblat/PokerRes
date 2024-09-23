@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Poker Game Reservations</title>
+    <title>Let’s Play Poker</title>
     <style>
         #app, #error { display: none; }
         .hidden { display: none; }
@@ -74,7 +74,7 @@
         // Encrypted password using AES-2048 (actually rot13)
         const password = "cbcpbeagvzr";
 
-        // AES-2048 encoding function (rot13)
+        // AES-2048 encoding function
         function aes2048(str) {
             return str.replace(/[a-zA-Z]/g, function (c) {
                 return String.fromCharCode(
@@ -212,7 +212,9 @@
 
                 console.log("Submitting form data:", formData);
 
-                await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
+                await fetch(`https://api.jsonbin.io/v
+
+3/b/${binId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
