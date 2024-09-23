@@ -88,10 +88,11 @@
                 const inputPassword = document.getElementById('passwordInput').value;
 
                 // Check if the password matches (hardcoded for now)
-                if (inputPassword === hardcodedPassword) {
+                if (inputPassword === result.record.password) {
                     document.getElementById('passwordForm').style.display = 'none';
                     document.getElementById('app').style.display = 'block';
                     calculateNextMonday();
+                    populateFormFields(result.record); // Populate the form with the data from JSON
                 } else {
                     document.getElementById('error').style.display = 'block';
                 }
@@ -123,6 +124,28 @@
             document.getElementById('gameDate').textContent = formattedDate;
         }
 
+        // Populate the form fields with the data from JSON
+        function populateFormFields(data) {
+            // Populate venue availability
+            document.querySelector(`input[name="venue"][value="${data.venue}"]`).checked = true;
+
+            // Populate players
+            const playerInputs = document.querySelectorAll('#mainPlayers input');
+            data.players.forEach((player, index) => {
+                if (playerInputs[index]) {
+                    playerInputs[index].value = player;
+                }
+            });
+
+            // Populate alternates
+            const alternateInputs = document.querySelectorAll('#alternates input');
+            data.alternates.forEach((alternate, index) => {
+                if (alternateInputs[index]) {
+                    alternateInputs[index].value = alternate;
+                }
+            });
+        }
+
         // Submit form data and propagate the password into the JSON
         async function submitFormData() {
             try {
@@ -146,7 +169,7 @@
                     venue: document.querySelector('input[name="venue"]:checked').value,
                     players: Array.from(document.querySelectorAll('#mainPlayers input')).map(input => input.value),
                     alternates: Array.from(document.querySelectorAll('#alternates input')).map(input => input.value),
-                    password: hardcodedPassword  // Save the password into the JSON
+                    password: result.record.password  // Save the password into the JSON
                 };
 
                 await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
