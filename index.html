@@ -60,10 +60,10 @@
             <div><label>Alternate 4: <input type="text" class="player"></label></div>
         </div>
 
-        <!-- Submit Button -->
-        <button id="submitChanges">Submit Changes</button>
+        <!-- Save Button -->
+        <button id="submitChanges">Save</button>
 
-        <p id="collisionMessage" style="color:red; display:none;">Sorry, someone else made a change while you were typing. Please try again.</p>
+        <p id="collisionMessage" style="color:red; display:none;">Sorry, someone else made a change while you were typing. Please reload the page and try again.</p>
     </div>
 
     <script>
@@ -71,8 +71,17 @@
         const binId = '66f1b7d0acd3cb34a889ea39';
         let lastModifiedAt;
 
-        // Password is now "popcorntime" and handled in JavaScript only
-        const password = "popcorntime";
+        // Obfuscated password
+        const password = rot13("cbpbecgbarz");
+
+        // ROT13 encoding function
+        function rot13(str) {
+            return str.replace(/[a-zA-Z]/g, function (c) {
+                return String.fromCharCode(
+                    (c <= "Z" ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26
+                );
+            });
+        }
 
         // Fetch the JSON data and authenticate the password
         async function fetchPasswordAndAuthenticate() {
@@ -198,9 +207,7 @@
                     modifiedAt: new Date().toISOString(),  // Update the modifiedAt field with the current time
                     venue: document.querySelector('input[name="venue"]:checked').value,
                     players: Array.from(document.querySelectorAll('#mainPlayers input')).map(input => input.value),
-                    alternates: Array.from(document.querySelectorAll('#alternates input')).map(input => input
-
-.value)
+                    alternates: Array.from(document.querySelectorAll('#alternates input')).map(input => input.value)
                 };
 
                 console.log("Submitting form data:", formData);
@@ -208,13 +215,15 @@
                 await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
                     method: 'PUT',
                     headers: {
-                        'Content-Type': 'application/json',
+                       
+
+ 'Content-Type': 'application/json',
                         'X-Access-Key': apiKey
                     },
                     body: JSON.stringify(formData)
                 });
 
-                alert('Changes submitted successfully!');
+                alert('Saved your update, thank you :-)');
 
             } catch (error) {
                 console.error('Error submitting JSON:', error);
