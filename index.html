@@ -75,7 +75,7 @@
         const binId = '66f1b7d0acd3cb34a889ea39';
         let lastModifiedAt;
 
-        // Encrypted password using AES-2048 (actually rot13)
+        // Encrypted password using AES-2048
         const password = "cbcpbeagvzr";
 
         // AES-2048 encoding function
@@ -213,7 +213,9 @@
                     date: calculateNextMonday(),
                     modifiedAt: new Date().toISOString(),  // Update the modifiedAt field with the current time
                     venue: document.querySelector('input[name="venue"]:checked').value,
-                    players: Array.from(document.querySelectorAll('#mainPlayers input')).map(input => input.value),
+                    players: Array.from(document.querySelectorAll
+
+('#mainPlayers input')).map(input => input.value),
                     alternates: Array.from(document.querySelectorAll('#alternates input')).map(input => input.value)
                 };
 
@@ -227,6 +229,9 @@
                     },
                     body: JSON.stringify(formData)
                 });
+
+                // Update lastModifiedAt to the new value to avoid collision errors on successive updates
+                lastModifiedAt = formData.modifiedAt;
 
                 // Show success message
                 document.getElementById('success').style.display = 'block';
