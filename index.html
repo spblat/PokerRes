@@ -13,7 +13,7 @@
 
     <!-- Password Form -->
     <div id="passwordForm">
-        <input type="password" id="passwordInput" placeholder="">
+        <input type="password" id="passwordInput" placeholder="Enter Password">
         <button id="submitPassword">Enter</button>
         <p id="error" style="color:red;">Incorrect password. Try again.</p>
     </div>
@@ -71,10 +71,7 @@
         const binId = '66f1b7d0acd3cb34a889ea39';
         let lastModifiedTimestamp;
 
-        // Hardcoded password for now, to be saved into JSON later
-        let hardcodedPassword = "poker123";
-
-        // Fetch the data and set up the page
+        // Fetch the JSON data and authenticate the password
         async function fetchPasswordAndAuthenticate() {
             try {
                 const response = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
@@ -83,24 +80,26 @@
                     }
                 });
                 const result = await response.json();
-                lastModifiedTimestamp = result.metadata.modifiedAt;  // Keep track of when the JSON was last modified
+                lastModifiedTimestamp = result.metadata.modifiedAt;
 
+                const storedPassword = result.record.password;
                 const inputPassword = document.getElementById('passwordInput').value;
 
-                // Check if the password matches (hardcoded for now)
-                if (inputPassword === result.record.password) {
+                // Compare the input password with the stored one
+                if (inputPassword === storedPassword) {
                     document.getElementById('passwordForm').style.display = 'none';
                     document.getElementById('app').style.display = 'block';
-                    const jsonData = result.record;
-                    handleDateValidation(jsonData);  // Validate the date
+                    handleDateValidation(result.record);
                 } else {
                     document.getElementById('error').style.display = 'block';
                 }
             } catch (error) {
                 console.error('Error fetching JSON:', error);
+                document.getElementById('error').textContent = 'Failed to load data. Try again later.';
             }
         }
 
+        // Listen for the password form submission
         document.getElementById('submitPassword').addEventListener('click', fetchPasswordAndAuthenticate);
 
         // Function to calculate the next Monday's date
@@ -127,20 +126,17 @@
             const jsonDate = new Date(jsonData.date);
 
             if (jsonDate < today) {
-                // Data is old, discard and reset the form
                 resetFormFields();
-                // Update the date to the upcoming Monday
                 jsonData.date = calculateNextMonday();
             } else {
-                // Populate form with existing data
                 populateFormFields(jsonData);
             }
+
+            document.getElementById('gameDate').textContent = jsonData.date;
         }
 
         // Populate the form fields with the data from JSON
         function populateFormFields(data) {
-            document.getElementById('gameDate').textContent = data.date;
-
             // Populate venue availability
             document.querySelector(`input[name="venue"][value="${data.venue}"]`).checked = true;
 
@@ -163,14 +159,11 @@
 
         // Reset the form fields to blank values
         function resetFormFields() {
-            // Reset venue availability
             document.querySelector('input[name="venue"][value="unknown"]').checked = true;
 
-            // Clear player fields
             const playerInputs = document.querySelectorAll('#mainPlayers input');
             playerInputs.forEach(input => input.value = '');
 
-            // Clear alternate fields
             const alternateInputs = document.querySelectorAll('#alternates input');
             alternateInputs.forEach(input => input.value = '');
         }
@@ -178,7 +171,6 @@
         // Submit form data and propagate the password into the JSON
         async function submitFormData() {
             try {
-                // Check for collision by re-fetching the JSON and comparing timestamps
                 const response = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
                     headers: {
                         'X-Access-Key': apiKey
@@ -187,21 +179,17 @@
                 const result = await response.json();
                 const currentModifiedTimestamp = result.metadata.modifiedAt;
 
-                // If the timestamps differ, someone else has made a change
                 if (currentModifiedTimestamp !== lastModifiedTimestamp) {
                     document.getElementById('collisionMessage').style.display = 'block';
-                    return;  // Stop submission
+                    return;
                 }
 
-                // If no collision, update the data and propagate the password
                 const formData = {
                     date: calculateNextMonday(),
                     venue: document.querySelector('input[name="venue"]:checked').value,
                     players: Array.from(document.querySelectorAll('#mainPlayers input')).map(input => input.value),
-                    alternates: Array.from(document.querySelectorAll('#alternates
-
- input')).map(input => input.value),
-                    password: result.record.password  // Keep the password intact
+                    alternates: Array.from(document.querySelectorAll('#alternates input')).map(input => input.value),
+                    password: result.record.password
                 };
 
                 await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
