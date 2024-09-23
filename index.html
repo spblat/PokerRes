@@ -10,12 +10,10 @@
     </style>
 </head>
 <body>
-    <h1>Poker Game Reservations</h1>
 
     <!-- Password Form -->
     <div id="passwordForm">
-        <label for="passwordInput">Enter Password:</label>
-        <input type="password" id="passwordInput">
+        <input type="password" id="passwordInput" placeholder="">
         <button id="submitPassword">Submit</button>
         <p id="error" style="color:red;">Incorrect password. Try again.</p>
     </div>
@@ -25,41 +23,38 @@
         <h2>Date: <span id="gameDate"></span></h2>
 
         <!-- Venue Availability -->
-        <h3>Is the venue available?</h3>
-        <label>
-            <input type="radio" name="venue" value="yes"> Yes
-        </label>
-        <label>
-            <input type="radio" name="venue" value="no"> No
-        </label>
-        <label>
-            <input type="radio" name="venue" value="unknown" checked> Unknown
-        </label>
+        <div>
+            <label>
+                <input type="radio" name="venue" value="yes"> Yes
+            </label>
+            <label>
+                <input type="radio" name="venue" value="no"> No
+            </label>
+            <label>
+                <input type="radio" name="venue" value="unknown" checked> Unknown
+            </label>
+        </div>
 
-        <!-- Attendee List -->
-        <h3>Attendees</h3>
-        <div id="attendeeList">
-            <!-- Ten attendees -->
-            <h4>Main Attendees</h4>
-            <div id="mainAttendees">
-                <div><label>Attendee 1: <input type="text" class="attendee"></label></div>
-                <div><label>Attendee 2: <input type="text" class="attendee"></label></div>
-                <div><label>Attendee 3: <input type="text" class="attendee"></label></div>
-                <div><label>Attendee 4: <input type="text" class="attendee"></label></div>
-                <div><label>Attendee 5: <input type="text" class="attendee"></label></div>
-                <div><label>Attendee 6: <input type="text" class="attendee"></label></div>
-                <div><label>Attendee 7: <input type="text" class="attendee"></label></div>
-                <div><label>Attendee 8: <input type="text" class="attendee"></label></div>
-                <div><label>Attendee 9: <input type="text" class="attendee"></label></div>
-                <div><label>Attendee 10: <input type="text" class="attendee"></label></div>
-            </div>
+        <!-- Player List -->
+        <h4>Players</h4>
+        <div id="mainPlayers">
+            <div><label>Player 1: <input type="text" class="player"></label></div>
+            <div><label>Player 2: <input type="text" class="player"></label></div>
+            <div><label>Player 3: <input type="text" class="player"></label></div>
+            <div><label>Player 4: <input type="text" class="player"></label></div>
+            <div><label>Player 5: <input type="text" class="player"></label></div>
+            <div><label>Player 6: <input type="text" class="player"></label></div>
+            <div><label>Player 7: <input type="text" class="player"></label></div>
+            <div><label>Player 8: <input type="text" class="player"></label></div>
+            <div><label>Player 9: <input type="text" class="player"></label></div>
+            <div><label>Player 10: <input type="text" class="player"></label></div>
+        </div>
 
-            <!-- Two alternates -->
-            <h4>Alternates</h4>
-            <div id="alternates">
-                <div><label>Alternate 1: <input type="text" class="attendee"></label></div>
-                <div><label>Alternate 2: <input type="text" class="attendee"></label></div>
-            </div>
+        <!-- Alternates -->
+        <h4>Alternates</h4>
+        <div id="alternates">
+            <div><label>Alternate 1: <input type="text" class="player"></label></div>
+            <div><label>Alternate 2: <input type="text" class="player"></label></div>
         </div>
     </div>
 
