@@ -83,7 +83,8 @@
                     }
                 });
                 const result = await response.json();
-                lastModifiedTimestamp = result.metadata.modifiedAt;
+                lastModifiedTimestamp = result.metadata.modifiedAt;  // Store the initial modified timestamp
+                console.log("Initial modifiedAt timestamp:", lastModifiedTimestamp);
 
                 const inputPassword = document.getElementById('passwordInput').value;
 
@@ -125,16 +126,10 @@
             const todayWithoutTime = new Date(today.getFullYear(), today.getMonth(), today.getDate());
             const jsonDateWithoutTime = new Date(jsonDate.getFullYear(), jsonDate.getMonth(), jsonDate.getDate());
 
-            console.log("JSON Date:", jsonDateWithoutTime);
-            console.log("Today's Date:", todayWithoutTime);
-
-            // Compare date values only, ignoring time
             if (jsonDateWithoutTime < todayWithoutTime) {
-                console.log("The data is outdated. Resetting the form.");
                 resetFormFields();
                 jsonData.date = calculateNextMonday();
             } else {
-                console.log("The data is valid. Populating the form.");
                 populateFormFields(jsonData);
             }
 
@@ -177,6 +172,7 @@
         // Submit form data and propagate the password into the JSON
         async function submitFormData() {
             try {
+                // Re-fetch the JSON to check for modifications
                 const response = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
                     headers: {
                         'X-Access-Key': apiKey
@@ -185,11 +181,16 @@
                 const result = await response.json();
                 const currentModifiedTimestamp = result.metadata.modifiedAt;
 
+                console.log("Current modifiedAt timestamp before submission:", currentModifiedTimestamp);
+
+                // Compare the initial and current modifiedAt timestamps
                 if (currentModifiedTimestamp !== lastModifiedTimestamp) {
                     document.getElementById('collisionMessage').style.display = 'block';
-                    return;
+                    console.log("Collision detected! Submission blocked.");
+                    return;  // Stop submission if a collision is detected
                 }
 
+                // If no collision, proceed with submission
                 const formData = {
                     date: calculateNextMonday(),
                     venue: document.querySelector('input[name="venue"]:checked').value,
