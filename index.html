@@ -69,7 +69,7 @@
     <script>
         const apiKey = '$2a$10$n2R7cE.TDZUvv3pHSw0tb.SnA2rQat9H2ol3QMcOFOPn2WAKUXSRa';
         const binId = '66f1b7d0acd3cb34a889ea39';
-        let lastModifiedTimestamp;
+        let lastModifiedAt;
 
         // Password is now "popcorntime" and handled in JavaScript only
         const password = "popcorntime";
@@ -83,8 +83,10 @@
                     }
                 });
                 const result = await response.json();
-                lastModifiedTimestamp = result.metadata.modifiedAt;  // Store the initial modified timestamp
-                console.log("Initial modifiedAt timestamp:", lastModifiedTimestamp);
+                
+                // Store the modifiedAt timestamp from the JSON data directly
+                lastModifiedAt = result.record.modifiedAt;
+                console.log("Initial modifiedAt timestamp:", lastModifiedAt);
 
                 const inputPassword = document.getElementById('passwordInput').value;
 
@@ -169,7 +171,7 @@
             alternateInputs.forEach(input => input.value = '');
         }
 
-        // Submit form data and propagate the password into the JSON
+        // Submit form data and update the modifiedAt timestamp in the JSON
         async function submitFormData() {
             try {
                 // Re-fetch the JSON to check for modifications
@@ -179,12 +181,12 @@
                     }
                 });
                 const result = await response.json();
-                const currentModifiedTimestamp = result.metadata.modifiedAt;
+                const currentModifiedAt = result.record.modifiedAt;
 
-                console.log("Current modifiedAt timestamp before submission:", currentModifiedTimestamp);
+                console.log("Current modifiedAt timestamp before submission:", currentModifiedAt);
 
                 // Compare the initial and current modifiedAt timestamps
-                if (currentModifiedTimestamp !== lastModifiedTimestamp) {
+                if (currentModifiedAt !== lastModifiedAt) {
                     document.getElementById('collisionMessage').style.display = 'block';
                     console.log("Collision detected! Submission blocked.");
                     return;  // Stop submission if a collision is detected
@@ -193,9 +195,12 @@
                 // If no collision, proceed with submission
                 const formData = {
                     date: calculateNextMonday(),
+                    modifiedAt: new Date().toISOString(),  // Update the modifiedAt field with the current time
                     venue: document.querySelector('input[name="venue"]:checked').value,
                     players: Array.from(document.querySelectorAll('#mainPlayers input')).map(input => input.value),
-                    alternates: Array.from(document.querySelectorAll('#alternates input')).map(input => input.value)
+                    alternates: Array.from(document.querySelectorAll('#alternates input')).map(input => input
+
+.value)
                 };
 
                 console.log("Submitting form data:", formData);
