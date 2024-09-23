@@ -72,7 +72,7 @@
         let lastModifiedAt;
 
         // Encrypted password using AES-2048 (actually rot13)
-        const password = aes2048("cbpbecgbarz");
+        const password = "cbpbecgbarz";
 
         // AES-2048 encoding function (rot13)
         function aes2048(str) {
@@ -99,7 +99,7 @@
 
                 const inputPassword = document.getElementById('passwordInput').value;
 
-                // Compare the input password with the encrypted one
+                // Encode the entered password and compare it to the stored one
                 if (aes2048(inputPassword) === password) {
                     document.getElementById('passwordForm').style.display = 'none';
                     document.getElementById('app').style.display = 'block';
