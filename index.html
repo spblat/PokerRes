@@ -91,8 +91,8 @@
                 if (inputPassword === result.record.password) {
                     document.getElementById('passwordForm').style.display = 'none';
                     document.getElementById('app').style.display = 'block';
-                    calculateNextMonday();
-                    populateFormFields(result.record); // Populate the form with the data from JSON
+                    const jsonData = result.record;
+                    handleDateValidation(jsonData);  // Validate the date
                 } else {
                     document.getElementById('error').style.display = 'block';
                 }
@@ -118,14 +118,29 @@
 
             // Format the date
             const options = { year: 'numeric', month: 'long', day: 'numeric' };
-            const formattedDate = nextMonday.toLocaleDateString(undefined, options);
+            return nextMonday.toLocaleDateString(undefined, options);
+        }
 
-            // Display the calculated date
-            document.getElementById('gameDate').textContent = formattedDate;
+        // Validate the date in the JSON and reset if necessary
+        function handleDateValidation(jsonData) {
+            const today = new Date();
+            const jsonDate = new Date(jsonData.date);
+
+            if (jsonDate < today) {
+                // Data is old, discard and reset the form
+                resetFormFields();
+                // Update the date to the upcoming Monday
+                jsonData.date = calculateNextMonday();
+            } else {
+                // Populate form with existing data
+                populateFormFields(jsonData);
+            }
         }
 
         // Populate the form fields with the data from JSON
         function populateFormFields(data) {
+            document.getElementById('gameDate').textContent = data.date;
+
             // Populate venue availability
             document.querySelector(`input[name="venue"][value="${data.venue}"]`).checked = true;
 
@@ -144,6 +159,20 @@
                     alternateInputs[index].value = alternate;
                 }
             });
+        }
+
+        // Reset the form fields to blank values
+        function resetFormFields() {
+            // Reset venue availability
+            document.querySelector('input[name="venue"][value="unknown"]').checked = true;
+
+            // Clear player fields
+            const playerInputs = document.querySelectorAll('#mainPlayers input');
+            playerInputs.forEach(input => input.value = '');
+
+            // Clear alternate fields
+            const alternateInputs = document.querySelectorAll('#alternates input');
+            alternateInputs.forEach(input => input.value = '');
         }
 
         // Submit form data and propagate the password into the JSON
@@ -166,10 +195,13 @@
 
                 // If no collision, update the data and propagate the password
                 const formData = {
+                    date: calculateNextMonday(),
                     venue: document.querySelector('input[name="venue"]:checked').value,
                     players: Array.from(document.querySelectorAll('#mainPlayers input')).map(input => input.value),
-                    alternates: Array.from(document.querySelectorAll('#alternates input')).map(input => input.value),
-                    password: result.record.password  // Save the password into the JSON
+                    alternates: Array.from(document.querySelectorAll('#alternates
+
+ input')).map(input => input.value),
+                    password: result.record.password  // Keep the password intact
                 };
 
                 await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
