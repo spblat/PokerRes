@@ -110,10 +110,6 @@
             let dayOfWeek = today.getDay();
             let daysUntilMonday = (1 - dayOfWeek + 7) % 7;
 
-            if (daysUntilMonday === 0) {
-                daysUntilMonday = 0;  // It's Monday today
-            }
-
             const nextMonday = new Date(today);
             nextMonday.setDate(today.getDate() + daysUntilMonday);
 
@@ -126,11 +122,14 @@
         function handleDateValidation(jsonData) {
             const today = new Date();
             const jsonDate = new Date(jsonData.date);
+            const todayWithoutTime = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+            const jsonDateWithoutTime = new Date(jsonDate.getFullYear(), jsonDate.getMonth(), jsonDate.getDate());
 
-            console.log("JSON Date:", jsonDate);
-            console.log("Today's Date:", today);
+            console.log("JSON Date:", jsonDateWithoutTime);
+            console.log("Today's Date:", todayWithoutTime);
 
-            if (jsonDate < today) {
+            // Compare date values only, ignoring time
+            if (jsonDateWithoutTime < todayWithoutTime) {
                 console.log("The data is outdated. Resetting the form.");
                 resetFormFields();
                 jsonData.date = calculateNextMonday();
@@ -216,9 +215,7 @@
             }
         }
 
-       
-
- document.getElementById('submitChanges').addEventListener('click', submitFormData);
+        document.getElementById('submitChanges').addEventListener('click', submitFormData);
     </script>
 </body>
 </html>
