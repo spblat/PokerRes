@@ -71,6 +71,9 @@
         const binId = '66f1b7d0acd3cb34a889ea39';
         let lastModifiedTimestamp;
 
+        // Password is now "popcorntime" and handled in JavaScript only
+        const password = "popcorntime";
+
         // Fetch the JSON data and authenticate the password
         async function fetchPasswordAndAuthenticate() {
             try {
@@ -82,11 +85,10 @@
                 const result = await response.json();
                 lastModifiedTimestamp = result.metadata.modifiedAt;
 
-                const storedPassword = result.record.password;
                 const inputPassword = document.getElementById('passwordInput').value;
 
                 // Compare the input password with the stored one
-                if (inputPassword === storedPassword) {
+                if (inputPassword === password) {
                     document.getElementById('passwordForm').style.display = 'none';
                     document.getElementById('app').style.display = 'block';
                     handleDateValidation(result.record);
@@ -125,10 +127,15 @@
             const today = new Date();
             const jsonDate = new Date(jsonData.date);
 
+            console.log("JSON Date:", jsonDate);
+            console.log("Today's Date:", today);
+
             if (jsonDate < today) {
+                console.log("The data is outdated. Resetting the form.");
                 resetFormFields();
                 jsonData.date = calculateNextMonday();
             } else {
+                console.log("The data is valid. Populating the form.");
                 populateFormFields(jsonData);
             }
 
@@ -188,9 +195,10 @@
                     date: calculateNextMonday(),
                     venue: document.querySelector('input[name="venue"]:checked').value,
                     players: Array.from(document.querySelectorAll('#mainPlayers input')).map(input => input.value),
-                    alternates: Array.from(document.querySelectorAll('#alternates input')).map(input => input.value),
-                    password: result.record.password
+                    alternates: Array.from(document.querySelectorAll('#alternates input')).map(input => input.value)
                 };
+
+                console.log("Submitting form data:", formData);
 
                 await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
                     method: 'PUT',
@@ -208,7 +216,9 @@
             }
         }
 
-        document.getElementById('submitChanges').addEventListener('click', submitFormData);
+       
+
+ document.getElementById('submitChanges').addEventListener('click', submitFormData);
     </script>
 </body>
 </html>
