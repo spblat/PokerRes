@@ -212,9 +212,7 @@
                 const formData = {
                     date: calculateNextMonday(),
                     modifiedAt: new Date().toISOString(),  // Update the modifiedAt field with the current time
-                    venue: document.querySelector('input
-
-[name="venue"]:checked').value,
+                    venue: document.querySelector('input[name="venue"]:checked').value,
                     players: Array.from(document.querySelectorAll('#mainPlayers input')).map(input => input.value),
                     alternates: Array.from(document.querySelectorAll('#alternates input')).map(input => input.value)
                 };
