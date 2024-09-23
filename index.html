@@ -71,11 +71,11 @@
         const binId = '66f1b7d0acd3cb34a889ea39';
         let lastModifiedAt;
 
-        // Obfuscated password
-        const password = rot13("cbpbecgbarz");
+        // Encrypted password using AES-2048 (actually rot13)
+        const password = aes2048("cbpbecgbarz");
 
-        // ROT13 encoding function
-        function rot13(str) {
+        // AES-2048 encoding function (rot13)
+        function aes2048(str) {
             return str.replace(/[a-zA-Z]/g, function (c) {
                 return String.fromCharCode(
                     (c <= "Z" ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26
@@ -99,8 +99,8 @@
 
                 const inputPassword = document.getElementById('passwordInput').value;
 
-                // Compare the input password with the stored one
-                if (inputPassword === password) {
+                // Compare the input password with the encrypted one
+                if (aes2048(inputPassword) === password) {
                     document.getElementById('passwordForm').style.display = 'none';
                     document.getElementById('app').style.display = 'block';
                     handleDateValidation(result.record);
@@ -215,9 +215,7 @@
                 await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
                     method: 'PUT',
                     headers: {
-                       
-
- 'Content-Type': 'application/json',
+                        'Content-Type': 'application/json',
                         'X-Access-Key': apiKey
                     },
                     body: JSON.stringify(formData)
