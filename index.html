@@ -71,7 +71,10 @@
         const binId = '66f1b7d0acd3cb34a889ea39';
         let lastModifiedTimestamp;
 
-        // Fetch the password from JSON and check user input
+        // Hardcoded password for now, to be saved into JSON later
+        let hardcodedPassword = "poker123";
+
+        // Fetch the data and set up the page
         async function fetchPasswordAndAuthenticate() {
             try {
                 const response = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
@@ -80,13 +83,12 @@
                     }
                 });
                 const result = await response.json();
-                const storedPassword = result.record.password;
                 lastModifiedTimestamp = result.metadata.modifiedAt;  // Keep track of when the JSON was last modified
 
                 const inputPassword = document.getElementById('passwordInput').value;
 
-                // Check if the password matches
-                if (inputPassword === storedPassword) {
+                // Check if the password matches (hardcoded for now)
+                if (inputPassword === hardcodedPassword) {
                     document.getElementById('passwordForm').style.display = 'none';
                     document.getElementById('app').style.display = 'block';
                     calculateNextMonday();
@@ -121,7 +123,7 @@
             document.getElementById('gameDate').textContent = formattedDate;
         }
 
-        // Submit form data and detect collisions
+        // Submit form data and propagate the password into the JSON
         async function submitFormData() {
             try {
                 // Check for collision by re-fetching the JSON and comparing timestamps
@@ -139,12 +141,12 @@
                     return;  // Stop submission
                 }
 
-                // If no collision, update the data
+                // If no collision, update the data and propagate the password
                 const formData = {
                     venue: document.querySelector('input[name="venue"]:checked').value,
                     players: Array.from(document.querySelectorAll('#mainPlayers input')).map(input => input.value),
                     alternates: Array.from(document.querySelectorAll('#alternates input')).map(input => input.value),
-                    password: result.record.password  // Keep the password as-is
+                    password: hardcodedPassword  // Save the password into the JSON
                 };
 
                 await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
