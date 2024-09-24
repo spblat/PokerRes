@@ -21,7 +21,14 @@ body {
 h2, h4 {
     color: #333;
 }
-
+h4 + span {
+    display: block;        /* Ensure the span is displayed as a block element under the h4 */
+    font-size: 0.9rem;     /* Slightly smaller font size */
+    color: #666;           /* Use a light gray for the text color */
+    font-style: italic;    /* Italic to make it look more like a note */
+    margin-top: 5px;       /* Add a little spacing between the h4 and the span */
+    margin-bottom: 10px;   /* Space between the span and the next element */
+}
 input[type="text"], input[type="password"], input[type="radio"] {
     margin: 5px 0;
     padding: 8px;
