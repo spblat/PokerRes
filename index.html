@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Let’s Play Poker</title>
+<!--
     <style>
         #app, #error, #success { display: none; }
         .hidden { display: none; }
@@ -12,6 +13,8 @@
             font-weight: bold;
         }
     </style>
+-->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
@@ -119,6 +122,16 @@
 
         // Listen for the password form submission
         document.getElementById('submitPassword').addEventListener('click', fetchPasswordAndAuthenticate);
+
+
+        
+// Listen for the Enter key press on the password input
+document.getElementById('passwordInput').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter' || event.keyCode === 13) {
+        event.preventDefault(); // Prevent default form submission
+        document.getElementById('submitPassword').click(); // Trigger the button click event
+    }
+});
 
         // Function to calculate the next Monday's date
         function calculateNextMonday() {
