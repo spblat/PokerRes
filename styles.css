@@ -49,3 +49,22 @@ button:hover {
     color: red;
     font-weight: bold;
 }
+#infoSection {
+    padding: 10px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+button#toggleInfo {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button#toggleInfo:hover {
+    background-color: #0056b3;
+}
