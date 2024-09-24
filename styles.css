@@ -1,0 +1,38 @@
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 20px;
+}
+
+h2, h4 {
+    color: #333;
+}
+
+input[type="text"], input[type="password"], input[type="radio"] {
+    margin: 5px 0;
+    padding: 8px;
+    font-size: 1rem;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+#success {
+    color: green;
+    font-weight: bold;
+}
+
+#collisionMessage {
+    color: red;
+    font-weight: bold;
+}
