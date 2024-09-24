@@ -1,3 +1,16 @@
+/* Moved styles from inline to external file */
+#app, #error, #success {
+    display: none;
+}
+
+.hidden {
+    display: none;
+}
+
+#success {
+    color: green;
+    font-weight: bold;
+}
 /* General styles */
 body {
     font-family: Arial, sans-serif;
