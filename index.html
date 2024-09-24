@@ -64,7 +64,7 @@
     </div>
 
     <!-- Collapsible section for app explanation -->
-<button id="toggleInfo" style="margin-top: 20px;">What is this?</button>
+<button id="toggleInfo" style="display:none; margin-top: 20px;">What is this?</button>
 <div id="infoSection" style="display: none; margin-top: 10px;">
     <p>This app helps us coordinate our weekly poker games. Here's how to use it:</p>
     <ul>
@@ -115,6 +115,7 @@
                     document.getElementById('passwordForm').style.display = 'none';
                     document.getElementById('app').style.display = 'block';
                     handleDateValidation(result.record);
+                    document.getElementById('toggleInfo').style.display = 'inline-block'; // Show the "What is this?" button
                 } else {
                     document.getElementById('error').style.display = 'block';
                 }
