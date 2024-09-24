@@ -3,17 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Let’s Play Poker</title>
-<!--
-    <style>
-        #app, #error, #success { display: none; }
-        .hidden { display: none; }
-        #success {
-            color: green;
-            font-weight: bold;
-        }
-    </style>
--->
+    <title>CARDS CARDS CARDS</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -22,15 +12,15 @@
     <div id="passwordForm">
         <input type="password" id="passwordInput" placeholder="Enter Password">
         <button id="submitPassword">Enter</button>
-        <p id="error" style="color:red;">Incorrect password. Try again.</p>
+        <p id="error" style="color:red;">Incorrect password</p>
     </div>
 
     <!-- Main App -->
     <div id="app">
-        <h2>Date: <span id="gameDate"></span></h2>
+        <h2>Date: <span id="gameDate"></span> 7 PM</h2>
 
         <!-- Venue Availability -->
-        <h4>Venue is available:</h4>
+        <h4>Is our venue available?</h4>
         <div>
             <label>
                 <input type="radio" name="venue" value="yes"> Yes
@@ -73,6 +63,20 @@
         <p id="collisionMessage" style="color:red; display:none;">Sorry, someone else made a change while you were typing. Please reload the page and try again.</p>
     </div>
 
+    <!-- Collapsible section for app explanation -->
+<button id="toggleInfo" style="margin-top: 20px;">What is this?</button>
+<div id="infoSection" style="display: none; margin-top: 10px;">
+    <p>This app helps us coordinate our weekly poker games. Here's how to use it:</p>
+    <ul>
+        <li>Enter the password to gain access to the app. Good job, you did it!</li>
+        <li>Once inside, you can see the upcoming poker game date.</li>
+        <li>Check and see if the venue is available this week. If you're sure the wrong button is checked, feel free to fix it.</li>
+        <li>Reserve seats by adding player name(s). If you're not sure you're coming, please use an "alternate" slot.</li>
+        <li>Even if the venue is not marked as available, feel free to express interest by adding names. Just be sure it's on before you show up :-) </li>
+        <li>Click "Save" to submit your updates.</li>
+    </ul>
+</div>
+    
     <script>
         const apiKey = '$2a$10$n2R7cE.TDZUvv3pHSw0tb.SnA2rQat9H2ol3QMcOFOPn2WAKUXSRa';
         const binId = '66f1b7d0acd3cb34a889ea39';
@@ -123,7 +127,17 @@
         // Listen for the password form submission
         document.getElementById('submitPassword').addEventListener('click', fetchPasswordAndAuthenticate);
 
-
+// Toggle visibility of the info section
+document.getElementById('toggleInfo').addEventListener('click', function() {
+    const infoSection = document.getElementById('infoSection');
+    if (infoSection.style.display === 'none') {
+        infoSection.style.display = 'block';  // Show the info section
+        this.textContent = 'Hide Info';  // Change button text
+    } else {
+        infoSection.style.display = 'none';  // Hide the info section
+        this.textContent = 'What is this?';  // Reset button text
+    }
+});
         
 // Listen for the Enter key press on the password input
 document.getElementById('passwordInput').addEventListener('keypress', function(event) {
