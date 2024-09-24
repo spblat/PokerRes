@@ -20,7 +20,8 @@
         <h2>Date: <span id="gameDate"></span> 7 PM</h2>
 
         <!-- Venue Availability -->
-        <h4>Is our venue available?</h4>
+        <h4>Are we playing this week?</h4>
+        <span>You're allowed to change this, but only if you are sure!</span>
         <div>
             <label>
                 <input type="radio" name="venue" value="yes"> Yes
@@ -64,7 +65,6 @@
     </div>
 
     <!-- Collapsible section for app explanation -->
-<button id="toggleInfo" style="display:none; margin-top: 20px;">What is this?</button>
 <div id="infoSection" style="display: none; margin-top: 10px;">
     <p>This app helps us coordinate our weekly poker games. Here's how to use it:</p>
     <ul>
@@ -76,6 +76,7 @@
         <li>Click "Save" to submit your updates.</li>
     </ul>
 </div>
+<button id="toggleInfo" style="display:none; margin-top: 20px;">What is this?</button>
     
     <script>
         const apiKey = '$2a$10$n2R7cE.TDZUvv3pHSw0tb.SnA2rQat9H2ol3QMcOFOPn2WAKUXSRa';
