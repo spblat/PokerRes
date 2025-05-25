@@ -183,7 +183,7 @@
                 }
             } catch (error) {
                 console.error('Error fetching JSON:', error);
-                document.getElementById('error').textContent = 'Failed to load data. Try again later.';
+                document.getElementById('error').textContent = 'Failed to load data. Try again later?';
             }
         }
 
@@ -250,7 +250,7 @@ document.getElementById('passwordInput').addEventListener('keypress', function(e
             const playerInputs = document.querySelectorAll('#mainPlayers input');
             data.players.forEach((player, index) => {
                 if (playerInputs[index]) {
-                    playerInputs[index].value = player;
+                    playerInputs[index].value = decodeURIComponent(player || '');
                 }
             });
 
@@ -258,7 +258,7 @@ document.getElementById('passwordInput').addEventListener('keypress', function(e
             const alternateInputs = document.querySelectorAll('#alternates input');
             data.alternates.forEach((alternate, index) => {
                 if (alternateInputs[index]) {
-                    alternateInputs[index].value = alternate;
+                    alternateInputs[index].value = decodeURIComponent(alternate || '');
                 }
             });
         }
@@ -301,13 +301,16 @@ document.getElementById('passwordInput').addEventListener('keypress', function(e
                 // If no collision, proceed with submission
                 const formData = {
                     date: calculateNextMonday(),
-                    modifiedAt: new Date().toISOString(),  // Update the modifiedAt field with the current time
+                    modifiedAt: new Date().toISOString(),
                     venue: document.querySelector('input[name="venue"]:checked').value,
-                    players: Array.from(document.querySelectorAll
+                    players: Array.from(document.querySelectorAll('#mainPlayers input')).map(input =>
+                        encodeURIComponent(input.value.trim())
+                    ),
+                    alternates: Array.from(document.querySelectorAll('#alternates input')).map(input =>
+                        encodeURIComponent(input.value.trim())
+                    )
+};
 
-('#mainPlayers input')).map(input => input.value),
-                    alternates: Array.from(document.querySelectorAll('#alternates input')).map(input => input.value)
-                };
 
                 console.log("Submitting form data:", formData);
 
