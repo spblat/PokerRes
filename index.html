@@ -226,6 +226,10 @@ document.getElementById('passwordInput').addEventListener('keypress', function(e
 
         // Validate the date in the JSON and reset if necessary
         function handleDateValidation(jsonData) {
+
+            // Ensure thread exists
+            if (!Array.isArray(jsonData.ActivityThread)) jsonData.ActivityThread = [];
+
             const today = new Date();
             const jsonDate = new Date(jsonData.date);
             const todayWithoutTime = new Date(today.getFullYear(), today.getMonth(), today.getDate());
@@ -234,10 +238,10 @@ document.getElementById('passwordInput').addEventListener('keypress', function(e
             if (jsonDateWithoutTime < todayWithoutTime) {
                 resetFormFields();
                 jsonData.date = calculateNextMonday();
+                jsonData.ActivityThread = []; // weekly wipe
             } else {
                 populateFormFields(jsonData);
             }
-
             document.getElementById('gameDate').textContent = jsonData.date;
         }
 
@@ -298,18 +302,18 @@ document.getElementById('passwordInput').addEventListener('keypress', function(e
                     return;  // Stop submission if a collision is detected
                 }
 
+
+                const currentThread = Array.isArray(result.record.ActivityThread) ? result.record.ActivityThread : [];
                 // If no collision, proceed with submission
                 const formData = {
                     date: calculateNextMonday(),
                     modifiedAt: new Date().toISOString(),
                     venue: document.querySelector('input[name="venue"]:checked').value,
-                    players: Array.from(document.querySelectorAll('#mainPlayers input')).map(input =>
-                        encodeURIComponent(input.value.trim())
-                    ),
-                    alternates: Array.from(document.querySelectorAll('#alternates input')).map(input =>
-                        encodeURIComponent(input.value.trim())
-                    )
-};
+                    players: Array.from(document.querySelectorAll('#mainPlayers input')).map(i => encodeURIComponent(i.value.trim())),
+                    alternates: Array.from(document.querySelectorAll('#alternates input')).map(i => encodeURIComponent(i.value.trim())),
+                    ActivityThread: currentThread // keep as-is for now
+                };
+            };
 
 
                 console.log("Submitting form data:", formData);
