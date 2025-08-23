@@ -290,6 +290,17 @@ document.getElementById('passwordInput').addEventListener('keypress', function(e
             const alternateInputs = document.querySelectorAll('#alternates input');
             alternateInputs.forEach(input => input.value = '');
         }
+        function formatStampMMDDhhmm() {
+          const d = new Date();
+          const mm = String(d.getMonth() + 1).padStart(2, '0');
+          const dd = String(d.getDate()).padStart(2, '0');
+          let   h  = d.getHours();
+          const ampm = h >= 12 ? 'PM' : 'AM';
+          h = h % 12 || 12;
+          const hh = String(h).padStart(2, '0');
+          const min = String(d.getMinutes()).padStart(2, '0');
+          return `${mm}/${dd} ${hh}:${min} ${ampm}`;
+        }
 
         // Submit form data and update the modifiedAt timestamp in the JSON
         async function submitFormData() {
