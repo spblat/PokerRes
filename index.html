@@ -108,6 +108,12 @@
             </label>
         </div>
 
+        <h4>What are we in the mood for?</h4>
+
+        <div id="activityThreadDisplay"></div>
+        <input id="activityInput" type="text" placeholder="Something fun">
+
+        
         <!-- Player List -->
         <h4>Players</h4>
         <div id="mainPlayers">
@@ -229,7 +235,8 @@ document.getElementById('passwordInput').addEventListener('keypress', function(e
 
             // Ensure thread exists
             if (!Array.isArray(jsonData.ActivityThread)) jsonData.ActivityThread = [];
-
+            renderActivityThread(jsonData.ActivityThread);
+            
             const today = new Date();
             const jsonDate = new Date(jsonData.date);
             const todayWithoutTime = new Date(today.getFullYear(), today.getMonth(), today.getDate());
@@ -305,13 +312,24 @@ document.getElementById('passwordInput').addEventListener('keypress', function(e
 
                 const currentThread = Array.isArray(result.record.ActivityThread) ? result.record.ActivityThread : [];
                 // If no collision, proceed with submission
+
+                // Preserve existing thread
+                let currentThread = Array.isArray(result.record.ActivityThread) ? result.record.ActivityThread : [];
+
+                // Check activity input box
+                const rawActivity = document.getElementById('activityInput').value.trim();
+                if (rawActivity) {
+                    const timestamp = formatStampMMDDhhmm();
+                    const entry = `${timestamp} — ${rawActivity}`;
+                    currentThread.push(encodeURIComponent(entry));
+                }
                 const formData = {
                     date: calculateNextMonday(),
                     modifiedAt: new Date().toISOString(),
                     venue: document.querySelector('input[name="venue"]:checked').value,
                     players: Array.from(document.querySelectorAll('#mainPlayers input')).map(i => encodeURIComponent(i.value.trim())),
                     alternates: Array.from(document.querySelectorAll('#alternates input')).map(i => encodeURIComponent(i.value.trim())),
-                    ActivityThread: currentThread // keep as-is for now
+                    ActivityThread: currentThread
                 };
 
 
@@ -329,6 +347,9 @@ document.getElementById('passwordInput').addEventListener('keypress', function(e
                 // Update lastModifiedAt to the new value to avoid collision errors on successive updates
                 lastModifiedAt = formData.modifiedAt;
 
+                renderActivityThread(currentThread);
+                document.getElementById('activityInput').value = '';
+                
                 // Show success message
                 document.getElementById('success').style.display = 'block';
 
