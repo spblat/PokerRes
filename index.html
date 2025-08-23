@@ -252,6 +252,12 @@ document.getElementById('passwordInput').addEventListener('keypress', function(e
             document.getElementById('gameDate').textContent = jsonData.date;
         }
 
+        function renderActivityThread(arr) {
+          if (!Array.isArray(arr)) arr = [];
+          const el = document.getElementById('activityThreadDisplay');
+          if (!el) return; // UI not present yet
+          el.textContent = arr.map(s => decodeURIComponent(s)).join('\n');
+        }
         // Populate the form fields with the data from JSON
         function populateFormFields(data) {
             // Populate venue availability
