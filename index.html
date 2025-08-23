@@ -313,7 +313,6 @@ document.getElementById('passwordInput').addEventListener('keypress', function(e
                     alternates: Array.from(document.querySelectorAll('#alternates input')).map(i => encodeURIComponent(i.value.trim())),
                     ActivityThread: currentThread // keep as-is for now
                 };
-            };
 
 
                 console.log("Submitting form data:", formData);
