@@ -36,6 +36,12 @@ input[type="text"], input[type="password"], input[type="radio"] {
     font-size: 1rem;
 }
 
+#activityThreadDisplay{
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  white-space: pre-line;   /* respect \n as line breaks */
+  line-height: 1.35;
+}
+
 button {
     background-color: #4CAF50;
     color: white;
