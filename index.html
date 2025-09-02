@@ -329,16 +329,23 @@ document.getElementById('passwordInput').addEventListener('keypress', function(e
 
                 // If no collision, proceed with submission
 
-                // Preserve existing thread
-                let currentThread = Array.isArray(result.record.ActivityThread) ? result.record.ActivityThread : [];
-
-                // Check activity input box
+                // Determine if the page has rolled to a new week (date label changed)
+                const displayedDate = (document.getElementById('gameDate').textContent || '').trim();
+                const storedDate    = (result.record?.date || '').trim();
+                const isNewWeek     = displayedDate && storedDate && displayedDate !== storedDate;
+                
+                // Start fresh if new week, otherwise keep existing thread
+                const currentThread = isNewWeek
+                  ? []
+                  : (Array.isArray(result.record.ActivityThread) ? result.record.ActivityThread : []);
+                
+                // If user typed a new suggestion, append it
                 const rawActivity = document.getElementById('activityInput').value.trim();
                 if (rawActivity) {
-                    const timestamp = formatStampMMDDhhmm();
-                    const entry = `${timestamp} — ${rawActivity}`;
-                    currentThread.push(encodeURIComponent(entry));
+                  const entry = `${formatStampMMDDhhmm()} — ${rawActivity}`;
+                  currentThread.push(encodeURIComponent(entry));
                 }
+                
                 const formData = {
                     date: calculateNextMonday(),
                     modifiedAt: new Date().toISOString(),
