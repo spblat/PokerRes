@@ -216,6 +216,41 @@ document.getElementById('passwordInput').addEventListener('keypress', function(e
     }
 });
 
+
+
+        async function adminWipeAll() {
+          // get latest
+          const resp = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
+            headers: { 'X-Access-Key': apiKey }
+          });
+          const latest = await resp.json();
+          const rec = latest.record || {};
+        
+          // wipe data
+          rec.date        = calculateNextMonday();
+          rec.modifiedAt  = new Date().toISOString();
+          rec.venue       = 'unknown';
+          rec.players     = [];
+          rec.alternates  = [];
+          rec.ActivityThread = [];
+        
+          // persist
+          await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'X-Access-Key': apiKey },
+            body: JSON.stringify(rec)
+          });
+        
+          // UI refresh
+          if (typeof resetFormFields === 'function') resetFormFields();
+          if (typeof renderActivityThread === 'function') renderActivityThread([]);
+          document.getElementById('gameDate').textContent = rec.date;
+          lastModifiedAt = rec.modifiedAt;
+        }
+        window.adminWipeAll = adminWipeAll; // call from console with "adminWipeAll()"
+        
+        
+                
         // Function to calculate the next Monday's date
         function calculateNextMonday() {
             const today = new Date();
