@@ -182,7 +182,7 @@
                 if (aes2048(inputPassword) === password) {
                     document.getElementById('passwordForm').style.display = 'none';
                     document.getElementById('app').style.display = 'block';
-                    handleDateValidation(result.record);
+                    await handleDateValidation(result.record);
                     document.getElementById('toggleInfo').style.display = 'inline-block'; // Show the "What is this?" button
                 } else {
                     document.getElementById('error').style.display = 'block';
@@ -231,7 +231,7 @@ document.getElementById('passwordInput').addEventListener('keypress', function(e
         }
 
         // Validate the date in the JSON and reset if necessary
-        function handleDateValidation(jsonData) {
+        async function handleDateValidation(jsonData) {
 
             // Ensure thread exists
             if (!Array.isArray(jsonData.ActivityThread)) jsonData.ActivityThread = [];
@@ -241,15 +241,41 @@ document.getElementById('passwordInput').addEventListener('keypress', function(e
             const jsonDate = new Date(jsonData.date);
             const todayWithoutTime = new Date(today.getFullYear(), today.getMonth(), today.getDate());
             const jsonDateWithoutTime = new Date(jsonDate.getFullYear(), jsonDate.getMonth(), jsonDate.getDate());
-
+         
             if (jsonDateWithoutTime < todayWithoutTime) {
-                resetFormFields();
-                jsonData.date = calculateNextMonday();
-                jsonData.ActivityThread = []; // weekly wipe
+              // wipe UI
+              resetFormFields();
+            
+              // wipe data to persist
+              jsonData.date = calculateNextMonday();
+              jsonData.ActivityThread = [];
+              jsonData.players = [];
+              jsonData.alternates = [];
+              jsonData.venue = 'unknown';
+              jsonData.modifiedAt = new Date().toISOString();
+            
+              // persist reset immediately so first visitor flips the week on the backend
+              try {
+                await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
+                  method: 'PUT',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'X-Access-Key': apiKey
+                  },
+                  body: JSON.stringify(jsonData)
+                });
+                lastModifiedAt = jsonData.modifiedAt; // keep collision baseline current
+              } catch (e) {
+                console.error('Auto-reset PUT failed:', e);
+              }
+            
+              // clear the thread display now
+              if (typeof renderActivityThread === 'function') renderActivityThread([]);
             } else {
-                populateFormFields(jsonData);
+              populateFormFields(jsonData);
             }
-            document.getElementById('gameDate').textContent = jsonData.date;
+            
+            document.getElementById('gameDate').textContent = jsonData.date;           
         }
 
         function renderActivityThread(arr) {
